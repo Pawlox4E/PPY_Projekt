@@ -1,29 +1,48 @@
 import pygame
+from os.path import join
 
 pygame.init()
+pygame.font.init()
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
-screen = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption('Our game')
 running = True
+clock = pygame.time.Clock()
+font = pygame.font.SysFont('Verdana', 15)
 
-surf = pygame.Surface((200, 100))
-surf.fill('purple')
-surf_x = 100
-surf_y = 150
-
-player_surf = pygame.image.load('images/player.png')
+player_surf_path = join('images', 'player.png')
+player_surf = pygame.image.load(player_surf_path).convert_alpha()
+player_rect = player_surf.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+player_direction = pygame.math.Vector2(1, 1)
+player_speed = 500
 
 while running:
+    delta_time = clock.tick(120) / 1000
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    surf_x += 0.1
+
     screen.fill('white')
-    screen.blit(surf, (surf_y, surf_x))
-    screen.blit(player_surf, (surf_y, surf_x))
+    fps = font.render(str(int(clock.get_fps())), True, (255, 0, 0))
+    screen.blit(fps, (WINDOW_WIDTH - 60, 0))
+
+    if player_rect.right >= WINDOW_WIDTH:
+        player_rect.right = WINDOW_WIDTH
+        player_direction.x *= -1
+    if player_rect.left < 0:
+        player_rect.left = 0
+        player_direction.x *= -1
+    if player_rect.bottom > WINDOW_HEIGHT:
+        player_rect.bottom = WINDOW_HEIGHT
+        player_direction.y *= -1
+    if player_rect.top < 0:
+        player_rect.top = 0
+        player_direction.y *= -1
+
+    player_rect.center += player_speed * player_direction * delta_time
+    screen.blit(player_surf, player_rect)
 
     pygame.display.update()
-
 pygame.quit()
