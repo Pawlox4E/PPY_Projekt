@@ -93,24 +93,6 @@ def main_menu():
         fps = font.render(str(int(clock.get_fps())), True, (255, 0, 0))
         screen.blit(fps, (WINDOW_WIDTH - 60, 0))
 
-        # button_rect = button_background.get_rect()
-        # button_rect.center = (WINDOW_WIDTH // 2, 275)
-        # screen.blit(button_background, button_rect)
-        #
-        # button_rect.center = (WINDOW_WIDTH // 2, 375)
-        # screen.blit(button_background, button_rect)
-        #
-        # button_rect.center = (WINDOW_WIDTH // 2, 475)
-        # screen.blit(button_background, button_rect)
-        #
-        # button_rect.center = (WINDOW_WIDTH // 2, 575)
-        # screen.blit(button_background, button_rect)
-        #
-        # # Rysowanie tekstu na przyciskach
-        # draw_text(screen, "START", font, fontColor, WINDOW_WIDTH // 2, 255)
-        # draw_text(screen, "SETTTINGS", font, fontColor, WINDOW_WIDTH // 2, 355)
-        # draw_text(screen, "DUMMYBUTTON", font, fontColor, WINDOW_WIDTH // 2, 455)
-        # draw_text(screen, "EXIT", font, fontColor, WINDOW_WIDTH // 2, 555)
         startButton.draw(screen)
         settingButton.draw(screen)
         dummyButton.draw(screen)
@@ -120,6 +102,7 @@ def main_menu():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            #teoretycznie lepsze obsugiwanie klikniec // metoda check_click w Button
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousePos = pygame.mouse.get_pos()
                 if startButton.check_click(mousePos):
@@ -132,24 +115,8 @@ def main_menu():
                 if quitButton.check_click(mousePos):
                     pygame.quit()
                     sys.exit()
-            #hujowe - do przerobki odczytwyanie klikniecia
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #     mouse_pos = pygame.mouse.get_pos()
-            #     #print(mouse_pos)
-            #     if 685 <= mouse_pos[0] <= 1230 and 245 <= mouse_pos[1] <= 305:
-            #         main_game()
-            #     if 685 <= mouse_pos[0] <= 1230 and 345 <= mouse_pos[1] <= 405:
-            #         print("SETTTINGS")
-            #     if 685 <= mouse_pos[0] <= 1230 and 445 <= mouse_pos[1] <= 505 :
-            #         print("DUMMYBUTTON")
-            #     if 685 <= mouse_pos[0] <= 1230 and 545 <= mouse_pos[1] <= 605:
-            #         pygame.quit()
-            #         sys.exit()
 
         pygame.display.update()
         clock.tick(FPS)
 
 
-
-if __name__ == "__main__":
-    main_menu()
