@@ -61,7 +61,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(center=pos)
 
     def update(self, delta_time):
-        self.rect.center 
+        self.rect.center
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
