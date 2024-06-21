@@ -51,6 +51,7 @@ class Shuriken(pygame.sprite.Sprite):
         self.direction = pygame.Vector2(mouse_pos[0] - player.rect.center[0], mouse_pos[1] - player.rect.center[1])
         self.direction = self.direction.normalize() if self.direction else self.direction
         self.speed = 300
+        self.dmg = 10
 
     def update(self, delta_time):
         self.rect.center += self.direction * self.speed * delta_time
@@ -67,7 +68,7 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = pygame.Vector2(player.rect[0] - self.rect.center[0], player.rect[1] - self.rect.center[1])
         self.direction = self.direction.normalize() if self.direction else self.direction
         self.speed = 100
-        self.hp = 100
+        self.hp = 20
         self.can_attack = True
         self.last_time_attack = 0
         self.attack_cooldown = 500
@@ -124,9 +125,12 @@ def check_collisions():
     for shuriken in shuriken_sprites:
         shuriken_collision = pygame.sprite.spritecollide(shuriken, enemy_sprites, False)
         if shuriken_collision:
-            player.score += 10
-            shuriken_collision[0].kill()
+            enemy = shuriken_collision[0]
+            enemy.hp -= shuriken.dmg
             shuriken.kill()
+            if enemy.hp <= 0:
+                player.score += 10
+                enemy.kill()
 
 
 while running:
