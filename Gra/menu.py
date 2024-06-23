@@ -5,24 +5,16 @@ import math
 from game_main import main_game
 from settings_menu import settings_menu
 from Button import Button
+from usefull_methods import read_settings
 
 pygame.init()
 
-settings_file_path = "data/settings"
-def read_settings(file_path, key):
-    with open(file_path, 'r') as file:
-        for line in file:
-            if line.startswith(key):
-                _, value = line.split('=')
-                return int(value.strip())
-    return None
 
-
-WINDOW_WIDTH = read_settings(settings_file_path, "WIDTH")
-WINDOW_HEIGHT = read_settings(settings_file_path, "HEIGHT")
-FPS = read_settings(settings_file_path, "FPS")
-FontS= [0.01, 0.02, 0.04, 0.06]
-FontSize = read_settings(settings_file_path, "FONT_SIZE")
+WINDOW_WIDTH = read_settings( "WIDTH")
+WINDOW_HEIGHT = read_settings("HEIGHT")
+FPS = read_settings("FPS")
+FontS= [0.0,0.01, 0.02, 0.04, 0.06]
+FontSize = read_settings("FONT_SIZE")
 
 #font settings
 font_size = int(math.sqrt(WINDOW_WIDTH * WINDOW_HEIGHT) * FontS[FontSize])
@@ -46,10 +38,10 @@ tittle_rect = title_image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT/3-WIN
 #latwiej by bylo w liscie - i obslugiwac eventy / rysowanie przez petle
 #ale trzeba ogarnac dodanie funkcji np w kostruktorze przycisku  - przez 1 petle na liscie nie obsluzy sie klikniec
 buttons = []
-startButton = Button(WINDOW_WIDTH // 2, 575, 400, 100, "Start", font, fontColor, button_background)
-settingButton = Button(WINDOW_WIDTH // 2, 675, 400, 100, "Settings", font, fontColor, button_background)
-dummyButton = Button(WINDOW_WIDTH // 2, 775, 400, 100, "DummyBUtton", font, fontColor, button_background)
-quitButton = Button(WINDOW_WIDTH // 2, 875, 400, 100, "Quit", font, fontColor, button_background)
+startButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.55,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "START", font, fontColor, button_background)
+settingButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.65,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SETTINGS", font, fontColor, button_background)
+dummyButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SAVES", font, fontColor, button_background)
+quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.85,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font, fontColor, button_background)
 
 def draw_text(surface, text, font, color, x, y):
     text_surface = font.render(text, True, color)
@@ -95,7 +87,7 @@ def main_menu():
                 if startButton.check_click(mousePos):
                     main_game()
                 if settingButton.check_click(mousePos):
-                    settings_menu(screen, font,background_image,background_rect,WINDOW_WIDTH)
+                    settings_menu(screen, font,background_image,background_rect,WINDOW_WIDTH,WINDOW_HEIGHT)
                 if dummyButton.check_click(mousePos):
                     print("DUMMYBUTTON")
                 if quitButton.check_click(mousePos):
