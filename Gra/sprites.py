@@ -162,7 +162,7 @@ class Enemy(pygame.sprite.Sprite):
 
     '''
             animuje atak 
-        '''
+    '''
     def update_attack_frames(self, delta_time):
         self.attack_frame_index += self.animation_speed * delta_time
         self.image = self.frames['attack'][int(self.attack_frame_index) % len(self.frames['attack'])]
