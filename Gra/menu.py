@@ -54,10 +54,15 @@ def draw_text(surface, text, font, color, x, y):
 
 
 def main_menu():
+    pygame.mixer.init()
     running = True
     move_left = True
-
+    from os.path import join
+    menu_music = pygame.mixer.Sound(join('sounds', 'menu_music.mp3'))
+    menu_music.set_volume(read_settings('VOLUME') / 100)
+    menu_music.play()
     while running:
+
         screen.fill((0, 0, 0))
 
         if move_left:
@@ -88,8 +93,10 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousePos = pygame.mouse.get_pos()
                 if startButton.check_click(mousePos):
+                    menu_music.stop()
                     game = Game()
                     game.run()
+                    menu_music.play()
                 if settingButton.check_click(mousePos):
                     settings_menu(screen, font,background_image,background_rect,WINDOW_WIDTH,WINDOW_HEIGHT)
                 if scoreBoardButton.check_click(mousePos):

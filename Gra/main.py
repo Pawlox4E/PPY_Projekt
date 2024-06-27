@@ -31,9 +31,9 @@ class Game:
 
         self.shoot_sound = pygame.mixer.Sound(join('sounds', 'shoot.wav'))
         self.hit_sound = pygame.mixer.Sound(join('sounds', 'impact.ogg'))
-        self.music = pygame.mixer.Sound(join('sounds', 'music.wav'))
+        self.game_music = pygame.mixer.Sound(join('sounds', 'music.wav'))
         volume = read_settings("VOLUME") / 100
-        self.music.set_volume(volume)
+        self.game_music.set_volume(volume)
         self.shoot_sound.set_volume(volume)
         self.hit_sound.set_volume(volume)
 
@@ -187,7 +187,7 @@ class Game:
                 self.spawn_positions.append((obj.x, obj.y))
 
     def run(self):
-        self.music.play()
+        self.game_music.play()
         while self.running:
             delta_time = self.clock.tick(self.fps) / 1000
             for event in pygame.event.get():
@@ -230,4 +230,4 @@ class Game:
             self.screen.blit(score, (WINDOW_WIDTH / 2 - 50, 0))
             self.screen.blit(hp, (WINDOW_WIDTH / 2 - 50, 25))
             pygame.display.update()
-        self.music.stop()
+        self.game_music.stop()
