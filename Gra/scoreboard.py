@@ -16,12 +16,12 @@ def draw_scoreboard(surface, font, scores, WINDOW_WIDTH, WINDOW_HEIGHT):
     title_text = font.render("Scoreboard", True, (255, 255, 255))
     title_rect = title_text.get_rect(center=(scoreboard_width // 2, 30))
     scoreboard_surface.blit(title_text, title_rect)
-
-
-    for i, score in enumerate(scores):
-        score_text = font.render(f"{i + 1}. {score}", True, (255, 255, 255))
+    i = 1
+    for key, value in scores.items():
+        score_text = font.render(f"{i}. {key} : {value}", True, (255, 255, 255))
         score_rect = score_text.get_rect(center=(scoreboard_width // 2, 80 + i * 40))
         scoreboard_surface.blit(score_text, score_rect)
+        i += 1
 
     surface.blit(scoreboard_surface, (WINDOW_WIDTH // 2 - scoreboard_width // 2, WINDOW_HEIGHT // 2 - scoreboard_height // 2))
 
