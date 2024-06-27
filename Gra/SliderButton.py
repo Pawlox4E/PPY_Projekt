@@ -177,7 +177,6 @@ class DiscreteSliderButton(SliderButton):
         if self.is_dragging:
             new_x = max(self.rect.x, min(mouse_x, self.rect.x + self.rect.width - self.slider_image.get_width()))
             self.slider_rect.centerx = new_x
-            # Obliczenie indeksu najbliższego punktu na liście wartości
             proportional_index = (self.slider_rect.centerx - self.rect.x) / (self.rect.width - self.slider_image.get_width())
             self.value = round(proportional_index * self.max_value)
             self.value = max(0, min(self.value, self.max_value))

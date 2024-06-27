@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from Button import Button
+from usefull_methods import read_scores
 
 
 def draw_scoreboard(surface, font, scores, WINDOW_WIDTH, WINDOW_HEIGHT):
@@ -30,7 +31,7 @@ def scoreboard(screen, font, background_image, background_rect, WINDOW_WIDTH, WI
     clock = pygame.time.Clock()
 
     # Example scores
-    scores = ["Player1: 1000", "Player2: 900", "Player3: 800", "Player4: 700"]
+    scores = read_scores()
     quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.80, WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font,
                         (255, 255, 255), pygame.image.load("images/menu/button_background1.png").convert_alpha())
 
