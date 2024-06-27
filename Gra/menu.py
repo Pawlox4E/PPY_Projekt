@@ -2,7 +2,7 @@ import random
 import pygame
 import sys
 import math
-from game_main import main_game
+from main import Game
 from settings_menu import settings_menu
 from Button import Button
 from usefull_methods import read_settings
@@ -19,7 +19,7 @@ FontSize = read_settings("FONT_SIZE")
 #font settings
 font_size = int(math.sqrt(WINDOW_WIDTH * WINDOW_HEIGHT) * FontS[FontSize])
 fontColor = (255, 255, 255)
-font = pygame.font.Font("fonts/GloriousChristmas-BLWWB.ttf", font_size)
+font = pygame.font.Font("fonts/GloriousChristmas-BLWWB.ttf", int(math.sqrt(WINDOW_WIDTH * WINDOW_HEIGHT) * FontS[FontSize]))
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("PPYPTG")
@@ -35,12 +35,11 @@ button_background = pygame.image.load("images/menu/button_background1.png").conv
 title_image = pygame.image.load("images/Tittle.png").convert_alpha()
 tittle_rect = title_image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT/3-WINDOW_HEIGHT/12),size=(WINDOW_WIDTH/3, WINDOW_HEIGHT/3))
 
-#latwiej by bylo w liscie - i obslugiwac eventy / rysowanie przez petle
-#ale trzeba ogarnac dodanie funkcji np w kostruktorze przycisku  - przez 1 petle na liscie nie obsluzy sie klikniec
+
 buttons = []
 startButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.55,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "START", font, fontColor, button_background)
 settingButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.65,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SETTINGS", font, fontColor, button_background)
-dummyButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SAVES", font, fontColor, button_background)
+dummyButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "Placeholder", font, fontColor, button_background)
 quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.85,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font, fontColor, button_background)
 
 def draw_text(surface, text, font, color, x, y):
@@ -69,7 +68,6 @@ def main_menu():
         screen.blit(background_image, background_rect)
         screen.blit(title_image, tittle_rect)
 
-        #pozyczyłem licznik fps
         fps = font.render(str(int(clock.get_fps())), True, (255, 0, 0))
         screen.blit(fps, (WINDOW_WIDTH - 60*FontSize, 0))
 
@@ -85,11 +83,12 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousePos = pygame.mouse.get_pos()
                 if startButton.check_click(mousePos):
-                    main_game()
+                    game = Game()
+                    game.run()
                 if settingButton.check_click(mousePos):
                     settings_menu(screen, font,background_image,background_rect,WINDOW_WIDTH,WINDOW_HEIGHT)
                 if dummyButton.check_click(mousePos):
-                    print("DUMMYBUTTON")
+                    continue
                 if quitButton.check_click(mousePos):
                     pygame.quit()
                     sys.exit()

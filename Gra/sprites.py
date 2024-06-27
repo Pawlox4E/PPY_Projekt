@@ -3,9 +3,10 @@ from os.path import join
 
 import pygame
 
-from Gra.player import ColllisionType
-from settings import *
+from player import ColllisionType
 from math import atan2, degrees
+
+from usefull_methods import read_settings
 
 
 class Sprite(pygame.sprite.Sprite):
@@ -37,8 +38,8 @@ class Gun(pygame.sprite.Sprite):
 
     def get_direction(self):
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
-        player_pos = pygame.Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-        self.player_direction = (mouse_pos - player_pos).normalize()
+        player_pos = pygame.Vector2(read_settings("WIDTH") / 2, read_settings("HEIGHT") / 2)
+        self.player_direction = (mouse_pos - player_pos).normalize() if self.player_direction else self.player_direction
 
     def rotate_gun(self):
         angle = degrees(atan2(self.player_direction.x, self.player_direction.y)) - 90
@@ -98,15 +99,11 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_cooldown = 500
         self.dmg = 5
 
-    # def animate_walk(self, delta_time):
-    #     self.frame_index += self.animation_speed * delta_time
-    #     self.image = self.frames['walk'][int(self.frame_index) % len(self.frames)]
 
     def move(self, delta_time):
         player_pos = pygame.Vector2(self.player.rect.center)
         enemy_pos = pygame.Vector2(self.rect.center)
-        self.direction = (player_pos - enemy_pos).normalize()
-
+        self.direction = (player_pos - enemy_pos).normalize() if self.direction else (player_pos - enemy_pos)
         self.hitbox_rect.x += self.direction.x * self.speed * delta_time
         self.collision(ColllisionType.Horizontal)
         self.hitbox_rect.y += self.direction.y * self.speed * delta_time

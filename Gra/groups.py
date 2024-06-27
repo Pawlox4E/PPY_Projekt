@@ -1,6 +1,6 @@
 import pygame
 
-from settings import *
+from usefull_methods import read_settings
 
 
 class AllSprites(pygame.sprite.Group):
@@ -10,6 +10,8 @@ class AllSprites(pygame.sprite.Group):
         self.offset = pygame.Vector2()
 
     def draw(self, target_pos):
+        WINDOW_WIDTH = read_settings("WIDTH")
+        WINDOW_HEIGHT = read_settings("HEIGHT")
         self.offset.x = -(target_pos[0] - WINDOW_WIDTH / 2)
         self.offset.y = -(target_pos[1] - WINDOW_HEIGHT / 2)
         ground_sprites = [sprite for sprite in self if hasattr(sprite, "ground")]

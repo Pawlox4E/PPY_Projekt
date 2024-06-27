@@ -56,7 +56,7 @@ class SliderButton:
         self.font_color = font_color
         self.background_image = pygame.transform.scale(background_image, (width, height))
         self.slider_image = pygame.transform.scale(slider_image, (width/10, height))
-        self.slider_rect = self.slider_image.get_rect(center=(x, y))
+        self.slider_rect = self.slider_image.get_frect(center=(x, y))
         self.is_dragging = False
         self.text = text
         self.click_sound = pygame.mixer.Sound("sounds/menu_click2.wav")
@@ -73,11 +73,11 @@ class SliderButton:
         text_surface = self.font.render(self.text, True, self.font_color)
         slider_position = (self.rect.x+self.rect.width/25) + (self.rect.width - self.slider_image.get_width()) * (self.value / self.max_value)
         self.slider_rect.centerx = slider_position
-        text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.centery - self.rect.height / 2))
+        text_rect = text_surface.get_frect(center=(self.rect.centerx, self.rect.centery - self.rect.height / 2))
         surface.blit(text_surface, text_rect)
         surface.blit(self.slider_image, self.slider_rect)
         text_surface2 = self.font.render(f"{int(self.value)}", True, self.font_color)
-        text_rect2 = text_surface2.get_rect(center=self.rect.center)
+        text_rect2 = text_surface2.get_frect(center=self.rect.center)
         surface.blit(text_surface2, text_rect2)
 
     def check_click(self, mouse_pos):
@@ -193,11 +193,11 @@ class DiscreteSliderButton(SliderButton):
         text_surface = self.font.render(self.text, True, self.font_color)
         slider_position = (self.rect.x+self.rect.width/25) + (self.rect.width - self.slider_image.get_width()) * (self.value / self.max_value)
         self.slider_rect.centerx = slider_position
-        text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.centery - self.rect.height / 2))
+        text_rect = text_surface.get_frect(center=(self.rect.centerx, self.rect.centery - self.rect.height / 2))
         surface.blit(text_surface, text_rect)
         surface.blit(self.slider_image, self.slider_rect)
         text_surface2 = self.font.render(f"{self.options[self.value]}", True, self.font_color)
-        text_rect2 = text_surface2.get_rect(center=self.rect.center)
+        text_rect2 = text_surface2.get_frect(center=self.rect.center)
         surface.blit(text_surface2, text_rect2)
 
     def get_selected_value(self):

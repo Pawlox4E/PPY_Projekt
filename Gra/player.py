@@ -1,11 +1,7 @@
 import os
 from enum import Enum
 from os.path import join
-
 import pygame
-
-from settings import *
-
 
 class ColllisionType(Enum):
     Horizontal = 1
