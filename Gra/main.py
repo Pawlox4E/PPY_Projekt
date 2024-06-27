@@ -105,8 +105,8 @@ class Game:
                                                                 pygame.sprite.collide_mask)
                 if collision_sprites:
                     bullet.kill()
-                    enemy = collision_sprites[0]
-                    hit_dmg = bullet.dmg + bullet.dmg * random.uniform(-0.5, 0.5) #rozrzut ataku
+                    enemy = collision_sprites[0] #pobiera pierwszego w ktorego trafi
+                    hit_dmg = bullet.dmg + bullet.dmg * random.uniform(-0.2, 0.5) #rozrzut ataku
                     enemy.hp -= hit_dmg
                     self.hit_sound.play()
                     # dodawanie wyswietlenia ataku
