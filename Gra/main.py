@@ -62,7 +62,7 @@ class Game:
 
     def load_images(self):
         self.bullet_surf = pygame.transform.scale(
-            pygame.image.load(join('images', 'gun', 'bullet.png')).convert_alpha(), (15, 15))
+            pygame.image.load(join('images', 'gun', 'bullet.png')).convert_alpha(), (10, 10))
         folders = list(walk(join('images', 'enemies')))[0][1]
         enemy_image_size = {
             'bigzombie': (100, 160),
