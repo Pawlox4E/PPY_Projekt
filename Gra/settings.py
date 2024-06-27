@@ -1,3 +1,5 @@
+from os import walk
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 FPS = 120
+TILE_SIZE = 64
