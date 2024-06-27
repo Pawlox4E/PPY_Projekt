@@ -94,7 +94,6 @@ def main_menu():
                     settings_menu(screen, font,background_image,background_rect,WINDOW_WIDTH,WINDOW_HEIGHT)
                 if scoreBoardButton.check_click(mousePos):
                     scoreboard(screen, font, background_image, background_rect, WINDOW_WIDTH, WINDOW_HEIGHT)
-                    endscreen(screen, font, background_image, background_rect, WINDOW_WIDTH, WINDOW_HEIGHT, 100)
                 if diffButton.check_click(mousePos):
                     continue
                 if quitButton.check_click(mousePos):

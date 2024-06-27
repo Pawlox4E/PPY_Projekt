@@ -1,3 +1,6 @@
+import math
+import random
+
 import pygame
 import sys
 from Button import Button
@@ -41,7 +44,16 @@ class TextInputBox:
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
-def endscreen(screen, font, background_image, background_rect, WINDOW_WIDTH, WINDOW_HEIGHT, score):
+def endscreen(score):
+    WINDOW_WIDTH = read_settings("WIDTH")
+    WINDOW_HEIGHT = read_settings("HEIGHT")
+    FontS = [0.0, 0.01, 0.02, 0.04, 0.06]
+    FontSize = read_settings("FONT_SIZE")
+    font = font = pygame.font.Font("fonts/GloriousChristmas-BLWWB.ttf", int(math.sqrt(WINDOW_WIDTH * WINDOW_HEIGHT) * FontS[FontSize]))
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    menubackground = f"images/menu/menubackground{random.randint(1, 5)}.png"
+    background_image = pygame.image.load(menubackground).convert()
+    background_rect = background_image.get_frect()
     running = True
     move_left = True
     clock = pygame.time.Clock()

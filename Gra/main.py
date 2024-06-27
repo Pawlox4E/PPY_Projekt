@@ -3,6 +3,7 @@ import random
 import sys
 from os import walk
 
+from endscreen import endscreen
 from groups import AllSprites
 from player import Player
 from sprites import *
@@ -92,6 +93,7 @@ class Game:
                     self.player.hp -= enemy.dmg
                     if self.player.hp <= 0:
                         self.running = False
+                        endscreen(self.player.score)
 
     def bullet_collision(self):
         if self.bullet_sprites:
