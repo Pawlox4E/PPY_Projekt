@@ -186,16 +186,16 @@ class AnimatedAction(pygame.sprite.Sprite):
             self.kill()
 
 class FastEnemy(Enemy):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, pos, frames, groups, player, collision_sprites):
+        super().__init__(pos, frames, groups, player, collision_sprites)
         self.speed = 200
         self.hp = 15
         self.attack_cooldown = 200
         self.dmg = 4
 
 class BigEnemy(Enemy):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, pos, frames, groups, player, collision_sprites):
+        super().__init__(pos, frames, groups, player, collision_sprites)
         self.speed = 50
         self.hp = 55
         self.attack_cooldown = 800
