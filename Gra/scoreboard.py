@@ -1,4 +1,9 @@
+import sys
+
 import pygame
+
+from Button import Button
+
 
 def draw_scoreboard(surface, font, scores, WINDOW_WIDTH, WINDOW_HEIGHT):
     scoreboard_width = WINDOW_WIDTH // 2
@@ -26,10 +31,13 @@ def scoreboard(screen, font, background_image, background_rect, WINDOW_WIDTH, WI
 
     # Example scores
     scores = ["Player1: 1000", "Player2: 900", "Player3: 800", "Player4: 700"]
+    quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.80, WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font,
+                        (255, 255, 255), pygame.image.load("images/menu/button_background1.png").convert_alpha())
 
     while running:
         screen.fill((0, 0, 0))
         screen.blit(background_image, background_rect)
+        quitButton.draw(screen)
 
         if move_left:
             background_rect.x -= 1
@@ -42,9 +50,14 @@ def scoreboard(screen, font, background_image, background_rect, WINDOW_WIDTH, WI
 
         draw_scoreboard(screen, font, scores, WINDOW_WIDTH, WINDOW_HEIGHT)
 
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mousePos = pygame.mouse.get_pos()
+                if quitButton.check_click(mousePos):
+                    running = False
 
         pygame.display.update()
         clock.tick(60)

@@ -38,11 +38,11 @@ tittle_rect = title_image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT/3-WIN
 
 
 buttons = []
-startButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.55,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "START", font, fontColor, button_background)
-settingButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.65,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SETTINGS", font, fontColor, button_background)
-diffButton = ChangingButton(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "DIFFICULTY", font, fontColor, button_background,"DIFFICULTY",["EASY","MEDIUM","HARD"])
-scoreBoardButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.85,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SCOREBOARD", font, fontColor, button_background)
-quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.95,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font, fontColor, button_background)
+startButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.52,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "START", font, fontColor, button_background)
+settingButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.62,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SETTINGS", font, fontColor, button_background)
+diffButton = ChangingButton(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.72,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "DIFFICULTY", font, fontColor, button_background,"DIFFICULTY",["EASY","MEDIUM","HARD"])
+scoreBoardButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.82,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SCOREBOARD", font, fontColor, button_background)
+quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.92,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font, fontColor, button_background)
 
 def draw_text(surface, text, font, color, x, y):
     text_surface = font.render(text, True, color)
