@@ -44,11 +44,17 @@ class Gun(pygame.sprite.Sprite):
         self.image = self.gun_surf
         self.rect = self.image.get_frect(center=self.player.rect.center + self.player_direction * self.distance)
 
+    '''
+    ustawia kierunek do myszki
+    '''
     def get_direction(self):
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
         player_pos = pygame.Vector2(read_settings("WIDTH") / 2, read_settings("HEIGHT") / 2)
         self.player_direction = (mouse_pos - player_pos).normalize() if self.player_direction else self.player_direction
 
+    '''
+        obraca obrazek broni
+        '''
     def rotate_gun(self):
         angle = degrees(atan2(self.player_direction.x, self.player_direction.y)) - 90
         if self.player_direction.x > 0:
@@ -134,6 +140,9 @@ class Enemy(pygame.sprite.Sprite):
             if current_time - self.last_time_attack >= self.attack_cooldown:
                 self.can_attack = True
 
+    '''
+        ustawia poprawny kierunek do playera (zeby patrzyli na niego)
+    '''
     def check_direction(self):
         if self.direction.x < 0 < self.image_direction:
             self.image_direction = -1
@@ -142,12 +151,18 @@ class Enemy(pygame.sprite.Sprite):
             self.image_direction = 1
             self.image = pygame.transform.flip(self.image, True, False)
 
+    '''
+        animuje chodzenie 
+    '''
     def update_walk(self, delta_time):
         self.walk_frame_index += self.animation_speed * delta_time
         self.image = self.frames['walk'][int(self.walk_frame_index) % len(self.frames['walk'])]
         if self.image_direction == 1:
             self.image = pygame.transform.flip(self.image, True, False)
 
+    '''
+            animuje atak 
+        '''
     def update_attack_frames(self, delta_time):
         self.attack_frame_index += self.animation_speed * delta_time
         self.image = self.frames['attack'][int(self.attack_frame_index) % len(self.frames['attack'])]
@@ -182,6 +197,9 @@ class AnimatedAction(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(center=pos)
         self.update_speed = 5
 
+    '''
+        animuje podane frejmy 
+    '''
     def update(self, delta_time):
         self.frame_index += self.update_speed * delta_time
         if self.frame_index < len(self.frames):

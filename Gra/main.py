@@ -62,36 +62,39 @@ class Game:
 
     def load_images(self):
         self.bullet_surf = pygame.transform.scale(
-            pygame.image.load(join('images', 'gun', 'bullet.png')).convert_alpha(), (15, 15))
-        folders = list(walk(join('images', 'enemies')))[0][1]
+            pygame.image.load(join('images', 'gun', 'bullet.png')).convert_alpha(), (10, 10))
+        folders = list(walk(join('images', 'enemies')))[0][1] # zwraca liste podfolderow
         enemy_image_size = {
             'bigzombie': (100, 160),
             'fastzombie': (50, 80),
             'zombie': (70, 100)
         }
         self.enemy_frames = {}
-        for folder in folders:
-            self.enemy_frames[folder] = {}
-            for folder_path, subfolders, _ in walk(join('images', 'enemies', folder)):
-                for subfolder in subfolders:
-                    for subfolder_path, _, files in walk(join('images', 'enemies', folder, subfolder)):
-                        self.enemy_frames[folder][subfolder] = []
-                        for file in sorted(files, key=lambda name: name.split('.')[0]):
-                            full_path = join(subfolder_path, file)
+        #przechodzi po wszystkich mozliwych enemy i laduje obrazy ich dzialan (np. walk, attack, die)
+        for enemy in folders:
+            self.enemy_frames[enemy] = {}
+            for _, enemy_actions, _ in walk(join('images', 'enemies', enemy)):
+                for action in enemy_actions:
+                    for action_path, _, action_files in walk(join('images', 'enemies', enemy, action)):
+                        self.enemy_frames[enemy][action] = []
+                        for file in sorted(action_files, key=lambda name: name.split('.')[0]):
+                            full_path = join(action_path, file)
                             surf = pygame.transform.scale(pygame.image.load(full_path).convert_alpha(),
-                                                          enemy_image_size[folder])
-                            self.enemy_frames[folder][subfolder].append(surf)
+                                                          enemy_image_size[enemy])
+                            self.enemy_frames[enemy][action].append(surf)
 
     def player_collision(self):
+        #pobiera wszystkie kolizje playera z enemy
         player_collision = pygame.sprite.spritecollide(self.player, self.enemy_sprites, False,
                                                        pygame.sprite.collide_mask)
+        #jesli jest kolizja to atakujemy playera
         if player_collision:
             for enemy in player_collision:
                 if enemy.can_attack:
                     enemy.can_attack = False
                     enemy.last_time_attack = pygame.time.get_ticks()
                     self.player.hp -= enemy.dmg
-                    if self.player.hp <= 0:
+                    if self.player.hp <= 0: #koniec gry
                         self.running = False
                         endscreen(self.player.score)
 
@@ -103,20 +106,22 @@ class Game:
                 if collision_sprites:
                     bullet.kill()
                     enemy = collision_sprites[0]
-                    hit_dmg = bullet.dmg + bullet.dmg * random.uniform(-0.5, 0.5)
+                    hit_dmg = bullet.dmg + bullet.dmg * random.uniform(-0.5, 0.5) #rozrzut ataku
                     enemy.hp -= hit_dmg
                     self.hit_sound.play()
+                    # dodawanie wyswietlenia ataku
                     self.damage_indicators.append(
                         DamageIndicator(enemy.rect.center, int(hit_dmg), self.font, self.all_sprites))
                     if enemy.hp <= 0:
                         enemy.kill()
                         self.player.score += 15
+                        #rozne animacje umirania
                         if isinstance(enemy, BigEnemy):
                             AnimatedAction([pygame.transform.scale(frame, [100, 150]) for frame in
                                             self.enemy_frames['bigzombie']['die']], enemy.rect.center,
                                            enemy.image_direction > 0,
                                            ActionType.Die, self.all_sprites)
-                            self.player.score += 15
+                            self.player.score += 30
                         elif isinstance(enemy, FastEnemy):
                             AnimatedAction([pygame.transform.scale(frame, [30, 50]) for frame in
                                             self.enemy_frames['fastzombie']['die']],
@@ -136,6 +141,9 @@ class Game:
                 self.damage_indicators.remove(indicator)
                 indicator.kill()
 
+    '''
+    jsprawdza czy jest nacisnienta spacja czy lewy przycisk myszy jesli tak to strzela
+    '''
     def input(self):
         mouse_pressed = pygame.mouse.get_pressed()
         keys = pygame.key.get_pressed()
@@ -153,16 +161,22 @@ class Game:
                 self.player.can_shoot = True
 
     def setup(self):
+        #ladowanie mapy
         map = load_pygame(join("data", "maps", "world.tmx"))
+
+        #ladowanie backgroundu
         for x, y, image in map.get_layer_by_name("Ground").tiles():
             Sprite((x * read_settings("TILE_SIZE"), y * read_settings("TILE_SIZE")), image, self.all_sprites)
 
+        #ladowanie objektow(trees,rocks)
         for obj in map.get_layer_by_name("Objects"):
             CollisionSprite((obj.x, obj.y), obj.image, (self.all_sprites, self.collision_sprites))
 
+        #ladowanie nie widzialnych objektow kolizji
         for obj in map.get_layer_by_name("Collisions"):
             CollisionSprite((obj.x, obj.y), pygame.Surface((obj.width, obj.height)), self.collision_sprites)
 
+        #ladowanie spawnow enemy i player
         for obj in map.get_layer_by_name("Entities"):
             if obj.name == "Player":
                 self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites, self.difficulty_level)
@@ -178,19 +192,23 @@ class Game:
                     self.running = False
                     pygame.quit()
                     sys.exit()
+                #default enemy spawn
                 if event.type == self.enemy_spawn_event and len(self.enemy_sprites) <= self.max_enemies_on_map:
                     Enemy(random.choice(self.spawn_positions), self.enemy_frames['zombie'],
                           (self.all_sprites, self.enemy_sprites),
                           self.player, self.collision_sprites)
+                #fast enemy spawn
                 if event.type == self.fast_enemy_spawn_event and len(self.enemy_sprites) <= self.max_enemies_on_map:
                     FastEnemy(random.choice(self.spawn_positions), self.enemy_frames['fastzombie'],
                               (self.all_sprites, self.enemy_sprites),
                               self.player, self.collision_sprites)
+                #big enemy spawn
                 if event.type == self.big_enemy_spawn_event:
                     BigEnemy(random.choice(self.spawn_positions), self.enemy_frames['bigzombie'],
                              (self.all_sprites, self.enemy_sprites),
                              self.player, self.collision_sprites)
 
+            #updates
             self.update_shoot()
             self.input()
             self.all_sprites.update(delta_time)
@@ -198,6 +216,7 @@ class Game:
             self.player_collision()
             self.update_indicators(delta_time)
 
+            #hud(fps,hp,score)
             self.screen.fill("black")
             self.all_sprites.draw(self.player.rect.center)
             fps = self.font.render(str(int(self.clock.get_fps())), True, (255, 0, 0))
