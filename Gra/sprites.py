@@ -93,11 +93,11 @@ class Enemy(pygame.sprite.Sprite):
         self.image_direction = -1 if self.rect.centerx < player.rect.centerx else 1  # 1 to patrzy w prowa -1 to w lewo
         if self.image_direction == 1:  # defaultowa png patrzy w lewo wiec jesli chcemy zeby bylo w prawo musimy obrocic
             self.image = pygame.transform.flip(self.image, True, False)
-        self.hp = 20
+        self.hp = 25
         self.can_attack = True
         self.last_time_attack = 0
         self.attack_cooldown = 500
-        self.dmg = 5
+        self.dmg = 10
 
 
     def move(self, delta_time):
@@ -184,3 +184,19 @@ class AnimatedAction(pygame.sprite.Sprite):
                 self.image = self.frames[int(self.frame_index)]
         else:
             self.kill()
+
+class FastEnemy(Enemy):
+    def __init__(self):
+        super().__init__()
+        self.speed = 200
+        self.hp = 15
+        self.attack_cooldown = 200
+        self.dmg = 4
+
+class BigEnemy(Enemy):
+    def __init__(self):
+        super().__init__()
+        self.speed = 50
+        self.hp = 55
+        self.attack_cooldown = 800
+        self.dmg = 22

@@ -1,6 +1,6 @@
 import pygame
 
-from usefull_methods import read_settings
+from usefull_methods import read_settings, save_setting
 
 
 class Button:
@@ -72,5 +72,25 @@ class Button:
         """
         if self.rect.collidepoint(mouse_pos):
             self.click_sound.play()  # Odtwórz dźwięk kliknięcia
+            return True
+        return False
+
+
+class ChangingButton(Button):
+    def __init__(self, x, y, width, height, text, font, font_color, background_image,key,options):
+        self.options = options
+        self.textorginal = text
+        self.numer = read_settings(key)
+        textout = text + " "+options[self.numer]
+        super().__init__(x, y, width, height, textout, font, font_color, background_image)
+    def check_click(self, mouse_pos):
+        if self.rect.collidepoint(mouse_pos):
+            self.click_sound.play()  # Odtwórz dźwięk kliknięcia
+            self.text = self.textorginal +" "+self.options[self.numer]
+            dict = {self.textorginal: self.numer}
+            self.numer += 1
+            if(self.numer == len(self.options)):
+                self.numer = 0
+            save_setting(dict)
             return True
         return False

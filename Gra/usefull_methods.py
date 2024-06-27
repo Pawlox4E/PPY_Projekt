@@ -28,3 +28,28 @@ def save_settings_to_file(settings):
     with open("data/settings", 'w') as file:
         for key, value in settings.items():
             file.write(f"{key}={value}\n")
+def save_setting(setting):
+    """
+        Zapisuje aktualne ustawienia do pliku "data/settings".
+
+        Parametry:
+        - settings: Słownik zawierający klucze i wartości ustawień do zapisania.
+
+        Zwraca:
+        - None
+        """
+    settings = {
+        "VOLUME": read_settings("VOLUME"),
+        "BRIGHTNESS": read_settings("BRIGHTNESS"),
+        "FONT_SIZE": read_settings("FONT_SIZE"),
+        "FPS": read_settings("FPS"),
+        "WIDTH": read_settings("WIDTH"),
+        "HEIGHT": read_settings("HEIGHT"),
+        "TILE_SIZE": read_settings("TILE_SIZE"),
+        "DIFFICULTY": read_settings("DIFFICULTY")
+    }
+    settings.update(setting)
+
+    with open("data/settings", 'w') as file:
+        for key, value in settings.items():
+            file.write(f"{key}={value}\n")

@@ -4,7 +4,7 @@ import sys
 import math
 from main import Game
 from settings_menu import settings_menu
-from Button import Button
+from Button import Button, ChangingButton
 from usefull_methods import read_settings
 
 pygame.init()
@@ -39,7 +39,7 @@ tittle_rect = title_image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT/3-WIN
 buttons = []
 startButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.55,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "START", font, fontColor, button_background)
 settingButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.65,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SETTINGS", font, fontColor, button_background)
-dummyButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "Placeholder", font, fontColor, button_background)
+diffButton = ChangingButton(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "DIFFICULTY", font, fontColor, button_background,"DIFFICULTY",["EASY","MEDIUM","HARD"])
 quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.85,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font, fontColor, button_background)
 
 def draw_text(surface, text, font, color, x, y):
@@ -73,7 +73,7 @@ def main_menu():
 
         startButton.draw(screen)
         settingButton.draw(screen)
-        dummyButton.draw(screen)
+        diffButton.draw(screen)
         quitButton.draw(screen)
 
         for event in pygame.event.get():
@@ -87,7 +87,7 @@ def main_menu():
                     game.run()
                 if settingButton.check_click(mousePos):
                     settings_menu(screen, font,background_image,background_rect,WINDOW_WIDTH,WINDOW_HEIGHT)
-                if dummyButton.check_click(mousePos):
+                if diffButton.check_click(mousePos):
                     continue
                 if quitButton.check_click(mousePos):
                     pygame.quit()
