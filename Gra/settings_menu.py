@@ -29,7 +29,8 @@ def settings_menu(screen, font, background_image, background_rect, WINDOW_WIDTH,
         "FONT_SIZE": read_settings("FONT_SIZE"),
         "FPS": read_settings("FPS"),
         "WIDTH": read_settings("WIDTH"),
-        "HEIGHT": read_settings("HEIGHT")
+        "HEIGHT": read_settings("HEIGHT"),
+        "TILE_SIZE": 64
     }
     while running:
         screen.fill((0, 0, 0))
