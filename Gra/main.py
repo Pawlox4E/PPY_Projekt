@@ -13,22 +13,30 @@ from usefull_methods import read_settings
 
 
 class Game:
+    """
+    Main game class for PyZombie.
+    """
     def __init__(self):
+        """
+        Initialize the game.
+        """
         pygame.init()
         pygame.font.init()
         pygame.mixer.init()
 
-        WINDOW_WIDTH = read_settings("WIDTH")
-        WINDOW_HEIGHT = read_settings("HEIGHT")
-        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        # Initialize window size and other settings from settings file
+        self.WINDOW_WIDTH = read_settings("WIDTH")
+        self.WINDOW_HEIGHT = read_settings("HEIGHT")
+        self.screen = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         pygame.display.set_caption('PyZombie')
         self.clock = pygame.time.Clock()
         self.running = True
         self.fps = read_settings("FPS")
         FontS = [0.0, 0.01, 0.02, 0.04, 0.06]
         self.font = pygame.font.Font("fonts/GloriousChristmas-BLWWB.ttf",
-                                     int(math.sqrt(WINDOW_WIDTH * WINDOW_HEIGHT) * FontS[read_settings("FONT_SIZE")]))
+                                     int(math.sqrt(self.WINDOW_WIDTH * self.WINDOW_HEIGHT) * FontS[read_settings("FONT_SIZE")]))
 
+        # Load sounds and set volumes based on settings
         self.shoot_sound = pygame.mixer.Sound(join('sounds', 'shoot.wav'))
         self.hit_sound = pygame.mixer.Sound(join('sounds', 'impact.ogg'))
         self.game_music = pygame.mixer.Sound(join('sounds', 'music.wav'))
@@ -37,6 +45,7 @@ class Game:
         self.shoot_sound.set_volume(volume)
         self.hit_sound.set_volume(volume)
 
+        # Determine game difficulty level from settings
         difficulty = read_settings("DIFFICULTY")
         self.max_enemies_on_map = 20
         self.damage_indicators = []
@@ -47,11 +56,13 @@ class Game:
             case 3: self.difficulty_level = DifficultyLevel.pistol
             case 4: self.difficulty_level = DifficultyLevel.shotgun
 
+        # Initialize sprite groups
         self.all_sprites = AllSprites()
         self.collision_sprites = pygame.sprite.Group()
         self.bullet_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
 
+        # Initialize spawn events
         self.enemy_spawn_event = pygame.event.custom_type()
         self.fast_enemy_spawn_event = pygame.event.custom_type()
         self.big_enemy_spawn_event = pygame.event.custom_type()
@@ -59,14 +70,18 @@ class Game:
         pygame.time.set_timer(self.fast_enemy_spawn_event, 3000)
         pygame.time.set_timer(self.big_enemy_spawn_event, random.randint(5000, 10000))
         self.spawn_positions = []
+
         self.load_images()
         self.setup()
 
     def load_images(self):
+        """
+        Load images for bullets and enemies.
+        """
         self.bullet_surf = pygame.transform.scale(
             pygame.image.load(join('images', 'gun', 'bullet.png')).convert_alpha(), (10, 10))
         folders = list(walk(join('images', 'enemies')))[0][1] # zwraca liste podfolderow
-        enemy_image_size = {
+        self.enemy_image_size = {
             'bigzombie': (100, 160),
             'fastzombie': (50, 80),
             'zombie': (70, 100)
@@ -82,10 +97,14 @@ class Game:
                         for file in sorted(action_files, key=lambda name: name.split('.')[0]):
                             full_path = join(action_path, file)
                             surf = pygame.transform.scale(pygame.image.load(full_path).convert_alpha(),
-                                                          enemy_image_size[enemy])
+                                                          self.enemy_image_size[enemy])
                             self.enemy_frames[enemy][action].append(surf)
 
     def player_collision(self):
+        """
+        Handle collisions between player and enemies.
+        """
+
         #pobiera wszystkie kolizje playera z enemy
         player_collision = pygame.sprite.spritecollide(self.player, self.enemy_sprites, False,
                                                        pygame.sprite.collide_mask)
@@ -101,6 +120,10 @@ class Game:
                         endscreen(self.player.score)
 
     def bullet_collision(self):
+        """
+        Handle collisions between bullets and enemies.
+        """
+
         if self.bullet_sprites:
             for bullet in self.bullet_sprites:
                 collision_sprites = pygame.sprite.spritecollide(bullet, self.enemy_sprites, False,
@@ -119,13 +142,13 @@ class Game:
                         self.player.score += 15
                         #rozne animacje umirania
                         if isinstance(enemy, BigEnemy):
-                            AnimatedAction([pygame.transform.scale(frame, [100, 150]) for frame in
+                            AnimatedAction([pygame.transform.scale(frame, self.enemy_image_size['bigzombie']) for frame in
                                             self.enemy_frames['bigzombie']['die']], enemy.rect.center,
                                            enemy.image_direction > 0,
                                            ActionType.Die, self.all_sprites)
                             self.player.score += 30
                         elif isinstance(enemy, FastEnemy):
-                            AnimatedAction([pygame.transform.scale(frame, [30, 50]) for frame in
+                            AnimatedAction([pygame.transform.scale(frame, self.enemy_image_size['fastzombie']) for frame in
                                             self.enemy_frames['fastzombie']['die']],
                                            enemy.rect.center,
                                            enemy.image_direction > 0,
@@ -137,16 +160,20 @@ class Game:
                                            ActionType.Die, self.all_sprites)
 
     def update_indicators(self, delta_time):
+        """
+        Update damage indicators on screen.
+        """
         for indicator in self.damage_indicators:
             indicator.update(delta_time)
             if indicator.is_expired():
                 self.damage_indicators.remove(indicator)
                 indicator.kill()
 
-    '''
-    jsprawdza czy jest nacisnienta spacja czy lewy przycisk myszy jesli tak to strzela
-    '''
+    # sprawdza czy jest nacisnienta spacja czy lewy przycisk myszy, jesli tak to strzela
     def input(self):
+        """
+        Handle player input for shooting.
+        """
         mouse_pressed = pygame.mouse.get_pressed()
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_SPACE] or mouse_pressed[0]) and self.player.can_shoot:
@@ -157,28 +184,35 @@ class Game:
             self.player.last_time_shoot = pygame.time.get_ticks()
 
     def update_shoot(self):
+        """
+        Update shooting cooldown for the player.
+        """
         if not self.player.can_shoot:
             current_time = pygame.time.get_ticks()
             if current_time - self.player.last_time_shoot >= self.player.shoot_cooldown_duration:
                 self.player.can_shoot = True
 
     def setup(self):
-        #ladowanie mapy
+        """
+        Setup the game world and entities.
+        """
+
+        #Load map
         map = load_pygame(join("data", "maps", "world.tmx"))
 
-        #ladowanie backgroundu
+        # Load ground tiles
         for x, y, image in map.get_layer_by_name("Ground").tiles():
             Sprite((x * read_settings("TILE_SIZE"), y * read_settings("TILE_SIZE")), image, self.all_sprites)
 
-        #ladowanie objektow(trees,rocks)
+        # Load objects like trees and rocks
         for obj in map.get_layer_by_name("Objects"):
             CollisionSprite((obj.x, obj.y), obj.image, (self.all_sprites, self.collision_sprites))
 
-        #ladowanie nie widzialnych objektow kolizji
+        # Load invisible collision objects
         for obj in map.get_layer_by_name("Collisions"):
             CollisionSprite((obj.x, obj.y), pygame.Surface((obj.width, obj.height)), self.collision_sprites)
 
-        #ladowanie spawnow enemy i player
+        # Load entities like player and spawn positions
         for obj in map.get_layer_by_name("Entities"):
             if obj.name == "Player":
                 self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites, self.difficulty_level)
@@ -187,6 +221,9 @@ class Game:
                 self.spawn_positions.append((obj.x, obj.y))
 
     def run(self):
+        """
+        Main game loop.
+        """
         self.game_music.play()
         while self.running:
             delta_time = self.clock.tick(self.fps) / 1000
@@ -225,9 +262,10 @@ class Game:
             fps = self.font.render(str(int(self.clock.get_fps())), True, (255, 0, 0))
             score = self.font.render(f'score:{self.player.score}', True, (0, 0, 255))
             hp = self.font.render(f'hp:{self.player.hp}', True, (255, 0, 0))
-            WINDOW_WIDTH = read_settings("WIDTH")
-            self.screen.blit(fps, (WINDOW_WIDTH - 60, 0))
-            self.screen.blit(score, (WINDOW_WIDTH / 2 - 50, 0))
-            self.screen.blit(hp, (WINDOW_WIDTH / 2 - 50, 25))
+            pygame.draw.rect(self.screen, "red", (self.WINDOW_WIDTH / 2 - 50, self.WINDOW_HEIGHT / 2 + 60, 100, 20))
+            pygame.draw.rect(self.screen, "green", (self.WINDOW_WIDTH / 2 - 50, self.WINDOW_HEIGHT / 2 + 60, self.player.hp, 20))
+            self.screen.blit(fps, (self.WINDOW_WIDTH - 60, 0))
+            self.screen.blit(score, (self.WINDOW_WIDTH / 2 - 50, 0))
+            self.screen.blit(hp, (self.WINDOW_WIDTH / 2 - 50, 25))
             pygame.display.update()
         self.game_music.stop()
