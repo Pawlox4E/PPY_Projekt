@@ -4,8 +4,6 @@ from os.path import join
 
 import pygame
 
-from settings import *
-
 
 class ColllisionType(Enum):
     Horizontal = 1
@@ -22,7 +20,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(center=pos)
         self.hitbox_rect = self.rect.inflate(-60, -60)
         self.direction = pygame.Vector2(0, 0)
-        # self.image_direction = 1  # right(1) or left(-1) direction
         self.speed = 600
         self.collision_sprites = collision_sprites
         self.hp = 100
@@ -68,7 +65,6 @@ class Player(pygame.sprite.Sprite):
         self.input()
         self.move(delta_time)
         self.animate(delta_time)
-        # self.check_direction()
         self.update_shoot()
 
     def check_direction(self):

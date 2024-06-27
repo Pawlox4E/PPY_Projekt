@@ -98,10 +98,6 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_cooldown = 500
         self.dmg = 5
 
-    # def animate_walk(self, delta_time):
-    #     self.frame_index += self.animation_speed * delta_time
-    #     self.image = self.frames['walk'][int(self.frame_index) % len(self.frames)]
-
     def move(self, delta_time):
         player_pos = pygame.Vector2(self.player.rect.center)
         enemy_pos = pygame.Vector2(self.rect.center)
@@ -187,3 +183,20 @@ class AnimatedAction(pygame.sprite.Sprite):
                 self.image = self.frames[int(self.frame_index)]
         else:
             self.kill()
+
+
+class DamageIndicator(pygame.sprite.Sprite):
+    def __init__(self, pos, damage, font, groups):
+        super().__init__(groups)
+        self.image = font.render(str(damage), True, (255, 0, 0))
+        self.rect = self.image.get_frect(center=pos)
+        self.start_time = pygame.time.get_ticks()
+        self.duration = 1000
+        self.indicator_sprite = True
+
+    def update(self, delta_time):
+        # Przesuwaj wskaźnik w górę
+        self.rect.y -= 1
+
+    def is_expired(self):
+        return pygame.time.get_ticks() - self.start_time > self.duration
