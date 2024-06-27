@@ -3,13 +3,14 @@ from enum import Enum
 from os.path import join
 import pygame
 
-class ColllisionType(Enum):
+
+class CollisionType(Enum):
     Horizontal = 1
     Vertical = 2
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, gun_type):
         super().__init__(groups)
         self.load_imgaes()
         self.state = 'down'
@@ -18,14 +19,13 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(center=pos)
         self.hitbox_rect = self.rect.inflate(-60, -60)
         self.direction = pygame.Vector2(0, 0)
-        # self.image_direction = 1  # right(1) or left(-1) direction
         self.speed = 600
         self.collision_sprites = collision_sprites
         self.hp = 100
         self.score = 0
         self.can_shoot = True
         self.last_time_shoot = 0
-        self.shoot_cooldown_duration = 100
+        self.shoot_cooldown_duration = gun_type.value[3]
 
     def load_imgaes(self):
         self.frames = {'left': [], 'right': [], 'up': [], 'down': []}
@@ -45,15 +45,15 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, delta_time):
         self.hitbox_rect.x += self.direction.x * self.speed * delta_time
-        self.collision(ColllisionType.Horizontal)
+        self.collision(CollisionType.Horizontal)
         self.hitbox_rect.y += self.direction.y * self.speed * delta_time
-        self.collision(ColllisionType.Vertical)
+        self.collision(CollisionType.Vertical)
         self.rect.center = self.hitbox_rect.center
 
     def collision(self, direction):
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.hitbox_rect):
-                if direction == ColllisionType.Horizontal:
+                if direction == CollisionType.Horizontal:
                     if self.direction.x > 0: self.hitbox_rect.right = sprite.rect.left
                     if self.direction.x < 0: self.hitbox_rect.left = sprite.rect.right
                 else:
@@ -64,7 +64,6 @@ class Player(pygame.sprite.Sprite):
         self.input()
         self.move(delta_time)
         self.animate(delta_time)
-        # self.check_direction()
         self.update_shoot()
 
     def check_direction(self):

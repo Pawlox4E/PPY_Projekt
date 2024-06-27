@@ -27,24 +27,24 @@ clock = pygame.time.Clock()
 
 menubackground = f"images/menu/menubackground{random.randint(1, 5)}.png"
 background_image = pygame.image.load(menubackground).convert()
-background_rect = background_image.get_rect()
+background_rect = background_image.get_frect()
 background_rect.right = WINDOW_WIDTH
 
 button_background = pygame.image.load("images/menu/button_background1.png").convert_alpha()
 
 title_image = pygame.image.load("images/Tittle.png").convert_alpha()
-tittle_rect = title_image.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT/3-WINDOW_HEIGHT/12),size=(WINDOW_WIDTH/3, WINDOW_HEIGHT/3))
+tittle_rect = title_image.get_frect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT/3-WINDOW_HEIGHT/12),size=(WINDOW_WIDTH/3, WINDOW_HEIGHT/3))
 
 
 buttons = []
 startButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.55,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "START", font, fontColor, button_background)
 settingButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.65,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "SETTINGS", font, fontColor, button_background)
-diffButton = ChangingButton(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "DIFFICULTY", font, fontColor, button_background,"DIFFICULTY",["EASY","MEDIUM","HARD"])
+diffButton = ChangingButton(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.75,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "DIFFICULTY", font, fontColor, button_background,"DIFFICULTY",["VERY EASY","EASY","MEDIUM","HARD","VERY HARD"])
 quitButton = Button(WINDOW_WIDTH // 2, WINDOW_HEIGHT * 0.85,  WINDOW_WIDTH * 0.2, WINDOW_HEIGHT * 0.1, "QUIT", font, fontColor, button_background)
 
 def draw_text(surface, text, font, color, x, y):
     text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect()
+    text_rect = text_surface.get_frect()
     text_rect.midtop = (x, y)
     surface.blit(text_surface, text_rect)
 
