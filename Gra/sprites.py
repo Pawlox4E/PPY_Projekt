@@ -42,12 +42,12 @@ class CollisionSprite(pygame.sprite.Sprite):
 
 class DifficultyLevel(Enum):
     """An enumeration of different difficulty levels with associated attributes."""
-    # image | dmg | bullet_speed | reload_cooldown
-    pistol = ('gun.png', 10, 500, 300)
-    ak = ('ak.png', 15, 600, 200)
-    m4 = ('m4.png', 10, 800, 100)
-    shotgun = ('shotgun.png', 30, 500, 800)
-    minigun = ('minigun.png', 50, 800, 50)
+    # image | dmg | bullet_speed | reload_cooldown | max player hp
+    pistol = ('gun.png', 10, 500, 300, 150)
+    ak = ('ak.png', 15, 600, 200, 200)
+    m4 = ('m4.png', 10, 800, 100, 250)
+    shotgun = ('shotgun.png', 30, 500, 800, 100)
+    minigun = ('minigun.png', 50, 800, 50, 300)
 
 class Gun(pygame.sprite.Sprite):
     """A sprite class representing a gun."""

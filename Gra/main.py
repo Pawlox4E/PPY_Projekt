@@ -262,8 +262,11 @@ class Game:
             fps = self.font.render(str(int(self.clock.get_fps())), True, (255, 0, 0))
             score = self.font.render(f'score:{self.player.score}', True, (0, 0, 255))
             hp = self.font.render(f'hp:{self.player.hp}', True, (255, 0, 0))
-            pygame.draw.rect(self.screen, "red", (self.WINDOW_WIDTH / 2 - 50, self.WINDOW_HEIGHT / 2 + 60, 100, 20))
-            pygame.draw.rect(self.screen, "green", (self.WINDOW_WIDTH / 2 - 50, self.WINDOW_HEIGHT / 2 + 60, self.player.hp, 20))
+            # max_hp = self.difficulty_level.value[4]
+            # ratio = max_hp / self.player.hp
+            # scale_to_100 = max_hp / 100
+            # pygame.draw.rect(self.screen, "red", (self.WINDOW_WIDTH / 2 - 50, self.WINDOW_HEIGHT / 2 + 60, max_hp / scale_to_100, 20))
+            # pygame.draw.rect(self.screen, "green", (self.WINDOW_WIDTH / 2 - 50, self.WINDOW_HEIGHT / 2 + 60, max_hp / scale_to_100 * ratio, 20))
             self.screen.blit(fps, (self.WINDOW_WIDTH - 60, 0))
             self.screen.blit(score, (self.WINDOW_WIDTH / 2 - 50, 0))
             self.screen.blit(hp, (self.WINDOW_WIDTH / 2 - 50, 25))
